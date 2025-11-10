@@ -100,3 +100,112 @@ yarn format
 ## 💡 Notes
 
 - Make sure the NestJS + Prisma backend is running on the correct port.
+
+---
+
+### **1️⃣ Frontend Dockerfile (`frontend/Dockerfile`)**
+
+```dockerfile
+# Base image
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Expose dev port
+EXPOSE 3001
+
+# Start frontend in dev mode
+CMD ["npm", "run", "dev"]
+```
+
+> For production, replace `CMD` with:
+>
+> ```dockerfile
+> RUN npm run build
+> CMD ["npm", "start"]
+> ```
+
+---
+
+### **2️⃣ Docker Compose (`docker-compose.yml`)**
+
+```yaml
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: menu-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: menu_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: menu-backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "mysql://admin:admin123@mysql:3306/menu_db"
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/prisma:/app/prisma
+      - /app/node_modules
+    command: npm run start:dev
+
+  frontend:
+    build: ./frontend
+    container_name: menu-frontend
+    ports:
+      - "3001:3001"
+    environment:
+      NEXT_PUBLIC_API_URL: "http://backend:3000/api"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    command: npm run dev
+
+volumes:
+  mysql-data:
+```
+
+---
+
+### **3️⃣ Notes**
+
+1. In development, **frontend** communicates with backend via Docker service name: `http://backend:3000/api`.
+2. Avoid mounting `dist` or `node_modules` from host to container to prevent lock/busy errors.
+3. Run all services together:
+
+```bash
+docker-compose up --build
+```
+
+Frontend → `http://localhost:3001`
+Backend → `http://localhost:3000`
