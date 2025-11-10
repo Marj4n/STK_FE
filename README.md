@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🥢 Menu Management Frontend (Next.js + TypeScript + Tailwind CSS)
 
-## Getting Started
+A frontend for the **Menu Management App**, connected to a **NestJS + Prisma + MySQL** backend.
 
-First, run the development server:
+---
+
+## ⚙️ Setup
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Create environment file
+
+Copy `.env.example` and configure it according to your backend API:
+
+```bash
+cp .env.example .env
+```
+
+Example `.env`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+```
+
+> Make sure the URL points to your backend server.
+
+---
+
+## 🚀 Run the app
+
+### Development mode
 
 ```bash
 npm run dev
-# or
+# atau
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The frontend will run at `http://localhost:3001` (or another port if configured).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Production mode
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+# atau
+yarn build
+yarn start
+```
 
-## Learn More
+### Lint & format
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run lint
+npm run format
+# atau
+yarn lint
+yarn format
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧩 Tech Stack
 
-## Deploy on Vercel
+- **Next.js** — React framework for building modern web apps
+- **TypeScript** — Static type checking
+- **Tailwind CSS** — Utility-first CSS styling
+- **Zustand** — Lightweight state management for menu and UI
+- **Dnd-kit** — Drag & drop library for reordering menus
+- **Axios** — HTTP client for backend communication
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📝 Features
+
+- Display menus with nested parent–child structure
+- Drag & drop menu reordering (supports unlimited nesting)
+- Create / Edit / Delete menu items
+- Search menus by name
+- Persist open/close state for each menu node
+- Fully responsive layout
+
+---
+
+## 🔗 API Integration
+
+- GET `/menus` — Fetch all menus
+- POST `/menus` — Create a new menu
+- PUT `/menus/:id` — Update a menu
+- DELETE `/menus/:id` — Delete a menu
+- PATCH `/menus/:id/reorder` — Reorder a menu
+- PATCH `/menus/:id/move` — Move a menu to another parent
+
+---
+
+## 💡 Notes
+
+- Make sure the NestJS + Prisma backend is running on the correct port.
