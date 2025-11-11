@@ -1,4 +1,3 @@
-// @ts-expect-error: Cannot find module or type declarations for side-effect import of './globals.css'.
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 
